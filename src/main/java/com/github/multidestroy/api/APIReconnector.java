@@ -1,25 +1,30 @@
-package com.github.multidestroy.manager;
+package com.github.multidestroy.api;
 
-import com.github.multidestroy.api.APIClient;
+import org.java_websocket.client.WebSocketClient;
 
 class APIReconnector implements Runnable {
 
-    private final APIClient client;
-    private static final long SLEEP_TIME = 10000;
+    private boolean isRunning = false;
+    private final WebSocketClient client;
+    public static final long SLEEP_TIME = 10_000;
 
-    public APIReconnector(APIClient client) {
+    public APIReconnector(WebSocketClient client) {
         this.client = client;
     }
 
     @Override
     public void run() {
-        while (reconnectIfNotOpen()) {
+        isRunning = true;
+
+        while (!reconnectIfNotOpen()) {
             try {
                 Thread.sleep(SLEEP_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
+        isRunning = false;
     }
 
     /**
@@ -38,4 +43,7 @@ class APIReconnector implements Runnable {
         return false;
     }
 
+    public synchronized boolean isRunning() {
+        return isRunning;
+    }
 }
