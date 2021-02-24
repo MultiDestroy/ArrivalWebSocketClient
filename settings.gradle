@@ -1,2 +1,3 @@
-rootProject.name = 'BungeeWebSocketClient'
+rootProject.name = 'ArrivalWebSocketClient'
+include 'ClientAPI'
 
